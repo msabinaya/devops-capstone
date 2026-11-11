@@ -1,0 +1,29 @@
+
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: cleanup
+spec:
+  steps:
+    - name: cleanup
+      image: alpine:latest
+      script: |
+        #!/bin/sh
+        echo "Cleaning temporary files"
+        rm -rf /tmp/test-results
+        echo "Cleanup completed successfully"
+
+---
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: nose-test
+spec:
+  steps:
+    - name: run-unit-tests
+      image: python:3.11-slim
+      workingDir: /workspace/source
+      script: |
+        #!/bin/sh
+        pip install nose
+        nosetests
